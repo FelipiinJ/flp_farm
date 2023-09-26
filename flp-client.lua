@@ -61,44 +61,35 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
-		end
-		Citizen.Wait(felipiin)
-	end
-end)
------------------------------------------------------------------------------------------------------------------------------------------
--- ENTREGAS FARM
------------------------------------------------------------------------------------------------------------------------------------------
-Citizen.CreateThread(function()
-	while true do
-		local felipiin = 1000
-		if servico then
-			local ped = PlayerPedId()
-			local coordenada = GetEntityCoords(ped)
-			local distance = #(coordenada - vec3(rota[selecionado].coords[1],rota[selecionado].coords[2],rota[selecionado].coords[3]))
-
-			if distance <= 10 then
-				felipiin = 5
-				DrawMarker(3,rota[selecionado].coords[1],rota[selecionado].coords[2],rota[selecionado].coords[3]- 0.6, 0, 0, 0, 0.0, 0, 0, 0.5, 0.5, 0.4, 255, 81, 0, 50, 0, 0, 0, 1)
-				if distance <= 1.2 then
+			if servico then
+				local ped = PlayerPedId()
+				local coordenada = GetEntityCoords(ped)
+				local distance = #(coordenada - vec3(rota[selecionado].coords[1],rota[selecionado].coords[2],rota[selecionado].coords[3]))
+	
+				if distance <= 10 then
 					felipiin = 5
-					drawTxt("PRESSIONE  ~r~E~w~  PARA "..mensagem.."", 4, 0.5, 0.93, 0.50, 255, 255, 255, 180)
-					if IsControlJustPressed(0, 38) and not IsPedInAnyVehicle(ped) then
-						vRP._playAnim(false,{{"mp_common","givetake1_a"}},true)
-						processo = true
-                        TriggerEvent("cancelando", true)
-						SetTimeout(2000, function()
-                            TriggerEvent("cancelando", false)
-							ClearPedTasks(GetPlayerPed(-1))
-							RemoveBlip(blips)  
-							flP.checkFlpPayment(tipo,facs)     
-							if selecionado == #rota then
-								selecionado = 1
-							else
-								selecionado = selecionado + 1
-							end
-							
-							CriandoBlip(rota,selecionado,"Rota de Coleta") 
-						end)
+					DrawMarker(3,rota[selecionado].coords[1],rota[selecionado].coords[2],rota[selecionado].coords[3]- 0.6, 0, 0, 0, 0.0, 0, 0, 0.5, 0.5, 0.4, 255, 81, 0, 50, 0, 0, 0, 1)
+					if distance <= 1.2 then
+						felipiin = 5
+						drawTxt("PRESSIONE  ~r~E~w~  PARA "..mensagem.."", 4, 0.5, 0.93, 0.50, 255, 255, 255, 180)
+						if IsControlJustPressed(0, 38) and not IsPedInAnyVehicle(ped) then
+							vRP._playAnim(false,{{"mp_common","givetake1_a"}},true)
+							processo = true
+							TriggerEvent("cancelando", true)
+							SetTimeout(2000, function()
+								TriggerEvent("cancelando", false)
+								ClearPedTasks(GetPlayerPed(-1))
+								RemoveBlip(blips)  
+								flP.checkFlpPayment(tipo,facs)     
+								if selecionado == #rota then
+									selecionado = 1
+								else
+									selecionado = selecionado + 1
+								end
+								
+								CriandoBlip(rota,selecionado,"Rota de Coleta") 
+							end)
+						end
 					end
 				end
 			end
@@ -132,37 +123,6 @@ function blockService()
         end
     end)
 end
------------------------------------------------------------------------------------------------------------------------------------------
--- PROCESSO LAVAGEM
------------------------------------------------------------------------------------------------------------------------------------------
-Citizen.CreateThread(function()
-	while true do
-		local felipiin = 1000
-        local ped = PlayerPedId()
-        local coordenada = GetEntityCoords(ped)
-        
-        for k,v in pairs(config.lavagem) do
-            local distance = #(coordenada - v.cds)
-
-            if distance <= 3 then
-                felipiin = 5
-                DrawMarker(3,v.cds[1],v.cds[2],v.cds[3]- 0.6, 0, 0, 0, 0.0, 0, 0, 0.5, 0.5, 0.4, 255, 0, 0, 50, 0, 0, 0, 1)
-                if distance <= 1.2 then
-                    felipiin = 4
-                    if config.draw3d then
-                        draw3DText(v.cds[1],v.cds[2],v.cds[3], v.texto)
-
-                        if IsControlJustPressed(0, 38) and flP.checkPermission(v.perm) and not IsPedInAnyVehicle(ped) then
-                            facs = k
-                            flP.lavFlpPayment(facs)
-                        end
-                    end
-                end
-            end
-        end
-		Citizen.Wait(felipiin)
-	end
-end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- FUNÇÕES
 -----------------------------------------------------------------------------------------------------------------------------------------
